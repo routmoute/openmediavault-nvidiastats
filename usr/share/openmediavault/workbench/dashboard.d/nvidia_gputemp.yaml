@@ -1,0 +1,26 @@
+version: "1.0"
+type: dashboard-widget
+data:
+  id: bb6b8460-9d1a-4d0c-8c22-1f5d93b7e38b
+  permissions:
+    role:
+      - admin
+  title: _("Nvidia GPU Temp")
+  type: chart
+  reloadPeriod: 5000
+  chart:
+    type: gauge
+    maxHeight: "150px"
+    min: 0
+    max: 150
+    displayValue: true
+    request:
+      service: NvidiaStats
+      method: gputemp
+    label:
+      formatter: template
+      formatterConfig: "{{ value | tofixed(1) }} C"
+    dataConfig:
+      - label: _("Temp")
+        prop: gputemp
+        backgroundColor: "#4cd964"
