@@ -11,6 +11,7 @@ class OMVRpcServiceNvidiaStats extends \OMV\Rpc\ServiceAbstract
     {
         $this->registerMethod("gputemp");
         $this->registerMethod("gpuutil");
+        $this->registerMethod("gpumemutil");
     }
 
     public function gputemp($param, $context)
@@ -38,6 +39,22 @@ class OMVRpcServiceNvidiaStats extends \OMV\Rpc\ServiceAbstract
         $cmd->execute($output, $exitStatus);
         return [
             "gpuutil" => intval($output[0])
+        ];
+    }
+
+    public function gpumemutil($param, $context)
+    {
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, ["role" => OMV_ROLE_EVERYONE]);
+        // get cpu temp command and divisor number
+        $gpuMemUtil = \OMV\Environment::get("OMV_NVIDIA_GPU_MEM_UTIL_COMMAND",
+          "nvidia-smi --query-gpu=memory.total,memory.free --format=csv,noheader");
+        $cmd = new \OMV\System\Process($gpuMemUtil);
+        $cmd->execute($output, $exitStatus);
+        $splittedOutput = explode(" ", $output[0]);
+        return [
+            "gpuMemTotal" => intval($splittedOutput[0])*1048576, // 1048576 to convert MiB to Bytes
+            "gpuMemAvailable" => intval($splittedOutput[2])*1048576
         ];
     }
 }

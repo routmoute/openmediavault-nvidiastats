@@ -1,0 +1,31 @@
+version: "1.0"
+type: dashboard-widget
+data:
+  id: bf871181-b7a9-4728-a3aa-a8f05308348a
+  permissions:
+    role:
+      - admin
+      - user
+  title: _("Nvidia GPU Memory")
+  type: chart
+  reloadPeriod: 5000
+  chart:
+    type: advanced-doughnut
+    maxHeight: "150px"
+    maxWidth: "150px"
+    request:
+      service: NvidiaStats
+      method: gpumemutil
+      transform:
+        gpuMemUsed: '{{ gpuMemTotal - gpuMemAvailable }}'
+    label:
+      display: true
+      formatter: template
+      formatterConfig: "{{ value | binaryunit }}"
+    dataConfig:
+      - label: _("Used")
+        prop: gpuMemUsed
+        backgroundColor: "#ff3b30"
+      - label: _("Free")
+        prop: gpuMemAvailable
+        backgroundColor: "#4cd964"
