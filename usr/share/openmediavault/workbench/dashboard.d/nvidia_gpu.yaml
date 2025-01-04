@@ -5,6 +5,7 @@ data:
   permissions:
     role:
       - admin
+      - user
   title: _("Nvidia GPU Utilization")
   type: chart
   reloadPeriod: 5000
