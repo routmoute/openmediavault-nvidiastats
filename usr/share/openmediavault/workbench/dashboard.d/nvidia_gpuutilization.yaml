@@ -1,27 +1,27 @@
 version: "1.0"
 type: dashboard-widget
 data:
-  id: bb6b8460-9d1a-4d0c-8c22-1f5d93b7e38b
+  id: 4a59b9ed-c50c-44ea-b385-a23a806d595e
   permissions:
     role:
       - admin
       - user
-  title: _("Nvidia GPU Temp")
+  title: _("Nvidia GPU Utilization")
   type: chart
   reloadPeriod: 5000
   chart:
     type: gauge
     maxHeight: "150px"
     min: 0
-    max: 150
+    max: 100
     displayValue: true
     request:
       service: NvidiaStats
-      method: getGpuTemp
+      method: getGpuUtil
     label:
       formatter: template
-      formatterConfig: "{{ value | tofixed(1) }} C"
+      formatterConfig: "{{ value | tofixed(1) }}%"
     dataConfig:
-      - label: _("Temp")
-        prop: gpuTemp
-        backgroundColor: "#4cd964"
+      - label: _("Utilization")
+        prop: gpuUtil
+        backgroundColor: "#5dacdf"

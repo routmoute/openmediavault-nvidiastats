@@ -1,0 +1,52 @@
+#!/bin/bash
+# Collectd exec plugin for NVIDIA GPU statistics
+# Outputs data in collectd exec format
+# Called by collectd every 10-30 seconds
+
+HOSTNAME="${COLLECTD_HOSTNAME:-localhost}"
+INTERVAL="${COLLECTD_INTERVAL:-10}"
+
+# Check if nvidia-smi is available
+if ! command -v nvidia-smi &> /dev/null; then
+    exit 0
+fi
+
+# Get GPU utilization (0-100%)
+GPU_UTIL=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | tr -d ' ')
+if [ -n "$GPU_UTIL" ] && [ "$GPU_UTIL" != "N/A" ]; then
+    echo "PUTVAL \"$HOSTNAME/nvidia-gpu-0/gauge-utilization\" interval=$INTERVAL N:$GPU_UTIL"
+fi
+
+# Get GPU memory used and total (in MiB)
+GPU_MEM=$(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits 2>/dev/null)
+if [ -n "$GPU_MEM" ]; then
+    GPU_MEM_USED=$(echo "$GPU_MEM" | awk -F',' '{print $1}' | tr -d ' ')
+    GPU_MEM_TOTAL=$(echo "$GPU_MEM" | awk -F',' '{print $2}' | tr -d ' ')
+    if [ -n "$GPU_MEM_USED" ] && [ "$GPU_MEM_USED" != "N/A" ]; then
+        echo "PUTVAL \"$HOSTNAME/nvidia-gpu-0/gauge-memory_used\" interval=$INTERVAL N:$GPU_MEM_USED"
+    fi
+    if [ -n "$GPU_MEM_TOTAL" ] && [ "$GPU_MEM_TOTAL" != "N/A" ]; then
+        echo "PUTVAL \"$HOSTNAME/nvidia-gpu-0/gauge-memory_total\" interval=$INTERVAL N:$GPU_MEM_TOTAL"
+    fi
+fi
+
+# Get GPU temperature (in Celsius)
+GPU_TEMP=$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits 2>/dev/null | tr -d ' ')
+if [ -n "$GPU_TEMP" ] && [ "$GPU_TEMP" != "N/A" ]; then
+    echo "PUTVAL \"$HOSTNAME/nvidia-gpu-0/gauge-temperature\" interval=$INTERVAL N:$GPU_TEMP"
+fi
+
+# Get GPU power and limit (in Watts)
+GPU_POWER=$(nvidia-smi --query-gpu=power.draw,power.limit --format=csv,noheader,nounits 2>/dev/null)
+if [ -n "$GPU_POWER" ]; then
+    GPU_POWER_CURRENT=$(echo "$GPU_POWER" | awk -F',' '{print $1}' | tr -d ' ')
+    GPU_POWER_LIMIT=$(echo "$GPU_POWER" | awk -F',' '{print $2}' | tr -d ' ')
+    if [ -n "$GPU_POWER_CURRENT" ] && [ "$GPU_POWER_CURRENT" != "N/A" ]; then
+        echo "PUTVAL \"$HOSTNAME/nvidia-gpu-0/gauge-power\" interval=$INTERVAL N:$GPU_POWER_CURRENT"
+    fi
+    if [ -n "$GPU_POWER_LIMIT" ] && [ "$GPU_POWER_LIMIT" != "N/A" ]; then
+        echo "PUTVAL \"$HOSTNAME/nvidia-gpu-0/gauge-power_limit\" interval=$INTERVAL N:$GPU_POWER_LIMIT"
+    fi
+fi
+
+exit 0

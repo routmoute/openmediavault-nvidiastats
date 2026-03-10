@@ -1,12 +1,12 @@
 version: "1.0"
 type: dashboard-widget
 data:
-  id: 4a59b9ed-c50c-44ea-b385-a23a806d595e
+  id: 9cae97a3-45a0-46ff-9a13-21c9c3e55452
   permissions:
     role:
       - admin
       - user
-  title: _("Nvidia GPU Utilization")
+  title: _("Nvidia GPU Fan Speed")
   type: chart
   reloadPeriod: 5000
   chart:
@@ -17,11 +17,11 @@ data:
     displayValue: true
     request:
       service: NvidiaStats
-      method: gpuutil
+      method: getGpuFan
     label:
       formatter: template
-      formatterConfig: "{{ value | tofixed(1) }}%"
+      formatterConfig: "{{ value }}%"
     dataConfig:
-      - label: _("Utilization")
-        prop: gpuutil
-        backgroundColor: "#5dacdf"
+      - label: _("Fan Speed")
+        prop: gpuFan
+        backgroundColor: "#4cd964"

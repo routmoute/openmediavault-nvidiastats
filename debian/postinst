@@ -7,6 +7,22 @@ set -e
 
 case "$1" in
     configure)
+
+        # Make collectd GPU script executable
+        chmod +x /usr/local/bin/nvidia-collectd-gpu
+
+        # Ensure collectd config has correct permissions
+        chmod 0644 /etc/collectd/collectd.conf.d/nvidia-gpu.conf
+
+        # Make mkrrdgraph plugin executable
+        chmod +x /usr/share/openmediavault/mkrrdgraph/plugins.d/nvidia-gpu.py
+
+        # Reload collectd to pickup new nvidia-gpu plugin
+        deb-systemd-invoke restart collectd 2>/dev/null || true
+
+        # Reload rrdcached to ensure it picks up new RRD paths
+        deb-systemd-invoke restart rrdcached 2>/dev/null || true
+
         # Activate package triggers
         dpkg-trigger update-workbench
     ;;

@@ -1,0 +1,6 @@
+version: "1.0"
+type: route
+data:
+  url: "/diagnostics/performance-statistics/nvidia-gpu"
+  title: _("Nvidia GPU")
+  component: omv-diagnostics-performance-statistics-nvidia-gpu-rrd-page

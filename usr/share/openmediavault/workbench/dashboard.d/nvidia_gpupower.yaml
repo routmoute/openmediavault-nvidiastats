@@ -1,12 +1,12 @@
 version: "1.0"
 type: dashboard-widget
 data:
-  id: bf871181-b7a9-4728-a3aa-a8f05308348a
+  id: 6dc16d3e-a9bb-4ba9-a916-5dfb426dd97f
   permissions:
     role:
       - admin
       - user
-  title: _("Nvidia GPU Memory")
+  title: _("Nvidia GPU Power")
   type: chart
   reloadPeriod: 5000
   chart:
@@ -15,17 +15,17 @@ data:
     maxWidth: "150px"
     request:
       service: NvidiaStats
-      method: getGpuMem
+      method: getGpuPower
       transform:
-        gpuMemUsed: '{{ gpuMemTotal - gpuMemAvailable }}'
+        gpuPowerRemaining: '{{ gpuPowerLimit - gpuPowerDraw }}'
     label:
       display: true
       formatter: template
-      formatterConfig: "{{ value | binaryunit }}"
+      formatterConfig: "{{ value }}W"
     dataConfig:
       - label: _("Used")
-        prop: gpuMemUsed
+        prop: gpuPowerDraw
         backgroundColor: "#ff3b30"
-      - label: _("Free")
-        prop: gpuMemAvailable
+      - label: _("Available")
+        prop: gpuPowerRemaining
         backgroundColor: "#4cd964"

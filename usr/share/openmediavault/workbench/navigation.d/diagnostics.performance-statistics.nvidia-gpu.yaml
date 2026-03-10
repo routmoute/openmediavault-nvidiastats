@@ -1,0 +1,7 @@
+version: "1.0"
+type: navigation-item
+data:
+  path: "diagnostics.performance-statistics.nvidia-gpu"
+  text: _("Nvidia GPU")
+  icon: "mdi:expansion-card"
+  url: "/diagnostics/performance-statistics/nvidia-gpu"

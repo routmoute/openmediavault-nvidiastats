@@ -1,0 +1,13 @@
+version: "1.0"
+type: dashboard-widget
+data:
+  id: 550e8400-e29b-41d4-a716-446655440001
+  type: rrd
+  title: _("Nvidia GPU Utilization Graph")
+  permissions:
+    role:
+      - admin
+      - user
+  rrd:
+    kind: nvidia-gpu-0-utilization
+    period: hour

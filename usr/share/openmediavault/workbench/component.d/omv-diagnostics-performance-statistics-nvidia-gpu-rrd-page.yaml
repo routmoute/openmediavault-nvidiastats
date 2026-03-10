@@ -1,0 +1,15 @@
+version: "1.0"
+type: component
+data:
+  name: omv-diagnostics-performance-statistics-nvidia-gpu-rrd-page
+  type: rrdPage
+  config:
+    graphs:
+      - name: "nvidia-gpu-0-utilization"
+        label: _("GPU Utilization")
+      - name: "nvidia-gpu-0-memory"
+        label: _("GPU Memory")
+      - name: "nvidia-gpu-0-temperature"
+        label: _("GPU Temperature")
+      - name: "nvidia-gpu-0-power"
+        label: _("GPU Power")
